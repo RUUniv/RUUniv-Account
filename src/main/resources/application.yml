@@ -1,0 +1,30 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: ruuniv-account-server
+  datasource:
+    driver-class-name: ${DB_CLASS}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    generate-ddl: true
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+jwt:
+  secret: ${JWT_SECRET}
+  access:
+    exp: ${JWT_ACCESS_EXP}
+  refresh:
+    exp: ${JWT_REFRESH_EXP}
