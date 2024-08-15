@@ -21,6 +21,12 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+  kafka:
+    bootstrap-servers: localhost:10000,localhost:10001,localhost:10002
+    template:
+      default-topic: ApiKey
+    consumer:
+      group-id: ruuniv-account
 
 jwt:
   secret: ${JWT_SECRET}
