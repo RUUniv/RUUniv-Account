@@ -34,3 +34,9 @@ jwt:
     exp: ${JWT_ACCESS_EXP}
   refresh:
     exp: ${JWT_REFRESH_EXP}
+
+springdoc:
+  api-docs:
+    version: openapi_3_0
+    enabled: true
+    path: /swagger

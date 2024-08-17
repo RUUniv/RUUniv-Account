@@ -1,9 +1,12 @@
 package com.ruunivaccountserver.app.apikey.api;
 
+import com.ruunivaccountserver.app.apikey.dto.ApiKeyRequest.ApiKeyCreateRequest;
+import com.ruunivaccountserver.app.apikey.dto.ApiKeyRequest.ApiKeyDeleteRequest;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse.ApiKeysResponse;
 import com.ruunivaccountserver.app.apikey.service.ApiKeyService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,19 +18,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class ApiKeyController {
     private final ApiKeyService apiKeyService;
 
     @PostMapping("/api/v1/apiKeys")
-    public ResponseEntity<Void> createApiKey(@RequestBody Long userId){
-        apiKeyService.createApiKey(userId);
+    public ResponseEntity<Void> createApiKey(@RequestBody ApiKeyCreateRequest request){
+        apiKeyService.createApiKey(request.getUserId());
 
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/api/v1/apiKeys")
-    public ResponseEntity<Void> deleteApiKey(@RequestParam Long userId, @RequestParam String apiKey){
-        apiKeyService.deleteApiKey(userId,apiKey);
+    public ResponseEntity<Void> deleteApiKey(@RequestParam ApiKeyDeleteRequest request){
+        apiKeyService.deleteApiKey(request.getUserId(),request.getApiKey());
 
         return ResponseEntity.ok().build();
     }

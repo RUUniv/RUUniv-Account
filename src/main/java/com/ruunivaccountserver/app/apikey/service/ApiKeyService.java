@@ -18,11 +18,10 @@ public class ApiKeyService {
     private final StudentVerifyApiClient studentVerifyApiClient;
 
     public void createApiKey(Long userId){
-        kafkaTemplate.send(KafkaTopic.CREATE_API_KEY.toString(),userId.toString());
+        kafkaTemplate.send("CREATE_API_KEY",userId.toString());
     }
 
     public void deleteApiKey(Long userId , String apiKey){
-
         ApiKeyDeleteEvent event = ApiKeyDeleteEvent.builder()
                     .userId(userId.toString())
                     .apiKey(apiKey)
