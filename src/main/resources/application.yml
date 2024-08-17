@@ -1,6 +1,15 @@
 server:
   port: ${PORT}
 
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: ${EUREKA_URL}
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
 spring:
   application:
     name: ruuniv-account-server
