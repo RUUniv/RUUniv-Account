@@ -24,7 +24,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/api/v1/auth/login")
+    @PostMapping("/api/v1/auth/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest request){
         TokenResponse response = authService.login(request);
 
