@@ -5,6 +5,7 @@ import com.ruunivaccountserver.app.auth.dto.AuthRequest.SignUpRequest;
 import com.ruunivaccountserver.app.auth.dto.AuthResponse.TokenResponse;
 import com.ruunivaccountserver.app.auth.service.AuthService;
 import com.ruunivaccountserver.app.auth.service.JwtService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "인증" , description = "Email , Password 를 통한 인증 및 회원가입 기능을 제공합니다")
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
