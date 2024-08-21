@@ -30,7 +30,7 @@ spring:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
   kafka:
-    bootstrap-servers: ${KAFKA_SERVER1},${KAFKA_SERVER2},${KAFKA_SERVER3}
+    bootstrap-servers: ${KAFKA_SERVER1}
     template:
       default-topic: ApiKey
     consumer:
