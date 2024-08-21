@@ -46,8 +46,8 @@ jobs:
           envs: GITHUB_SHA
           script: |
              cd ./project
-             sudo docker stop ruuniv-statistics-server
-             sudo docker rm ruuniv-statistics-server
+             sudo docker stop ruuniv-account-server
+             sudo docker rm ruuniv-account-server
              sudo docker rmi $(docker images -q) 
              sudo docker pull ${{ secrets.DOCKER_REPO }}/ruuniv-account-server
              sudo docker run -i -t --env-file ./account.env -p 8081:8081 -d --name ruuniv-account-server ${{ secrets.DOCKER_REPO }}/ruuniv-account-server:latest
