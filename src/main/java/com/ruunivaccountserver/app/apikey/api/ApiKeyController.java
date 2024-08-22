@@ -27,15 +27,15 @@ public class ApiKeyController {
     private final ApiKeyService apiKeyService;
 
     @PostMapping("/api/v1/apiKeys")
-    public ResponseEntity<Void> createApiKey(@RequestBody ApiKeyCreateRequest request){
-        apiKeyService.createApiKey(request.getUserId());
+    public ResponseEntity<Void> createApiKey(@RequestHeader("passport") Long passport){
+        apiKeyService.createApiKey(passport);
 
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/api/v1/apiKeys")
-    public ResponseEntity<Void> deleteApiKey(@RequestParam ApiKeyDeleteRequest request){
-        apiKeyService.deleteApiKey(request.getUserId(),request.getApiKey());
+    public ResponseEntity<Void> deleteApiKey(@RequestHeader("passport") Long passport,@RequestParam String apiKey){
+        apiKeyService.deleteApiKey(passport,apiKey);
 
         return ResponseEntity.ok().build();
     }
