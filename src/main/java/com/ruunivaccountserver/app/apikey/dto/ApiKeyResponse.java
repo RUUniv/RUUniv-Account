@@ -11,9 +11,12 @@ public class ApiKeyResponse {
     @AllArgsConstructor
     @Builder
     @Getter
-    public static class ApiKeysResponse{
-        @Schema(description = "Api Key 목록", example = "[test-test-tset-test, ..]")
-        private List<String> apiKeys;
+    public static class ApiKeyInfo{
+        @Schema(description = "Api Key", example = "test-test-tset-test")
+        private String apiKey;
+
+        @Schema(description = "Api Key Id" , example = "1")
+        private Long apiKeyId;
     }
 
 }

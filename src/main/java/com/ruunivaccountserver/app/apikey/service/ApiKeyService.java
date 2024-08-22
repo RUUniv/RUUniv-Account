@@ -1,10 +1,10 @@
 package com.ruunivaccountserver.app.apikey.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyEvent.ApiKeyDeleteEvent;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse;
-import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse.ApiKeysResponse;
-import com.ruunivaccountserver.infrastructure.feign.VerificationServerClient.StudentVerifyApiClient;
+import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse.ApiKeyInfo;
+import com.ruunivaccountserver.infrastructure.feign.VerificationServerApi.VerificationServerClient;
+import com.ruunivaccountserver.infrastructure.feign.VerificationServerApiKeysResponse;
 import com.ruunivaccountserver.infrastructure.kafka.KafkaTopic;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +15,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ApiKeyService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
-    private final StudentVerifyApiClient studentVerifyApiClient;
+    private final VerificationServerClient verificationServerClient;
 
     public void createApiKey(Long userId){
+
         kafkaTemplate.send("CREATE_API_KEY",userId.toString());
     }
 
@@ -30,9 +31,15 @@ public class ApiKeyService {
         kafkaTemplate.send(KafkaTopic.DELETE_API_KEY.toString(),event);
     }
 
-    public ApiKeysResponse getApiKeys(Long userId){
-        return ApiKeysResponse.builder()
-                .apiKeys(studentVerifyApiClient.getApiKeys(userId))
-                .build();
+    public List<ApiKeyInfo> getApiKeysInfo(Long userId){
+        List<VerificationServerApiKeysResponse> apiKeys =
+                verificationServerClient.getApiKeys(userId);
+
+        return apiKeys.stream()
+                .map(apiKey -> ApiKeyInfo.builder()
+                .apiKeyId(apiKey.getApiKeyId())
+                .apiKey(apiKey.getApiKey())
+                .build())
+                .toList();
     }
 }

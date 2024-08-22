@@ -2,6 +2,7 @@ package com.ruunivaccountserver.app.apikey.api;
 
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyRequest.ApiKeyCreateRequest;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyRequest.ApiKeyDeleteRequest;
+import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse.ApiKeyInfo;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse.ApiKeysResponse;
 import com.ruunivaccountserver.app.apikey.service.ApiKeyService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,8 +40,8 @@ public class ApiKeyController {
     }
 
     @GetMapping("/api/v1/apiKeys/{userId}")
-    public ResponseEntity<ApiKeysResponse> getApiKeys(@PathVariable Long userId){
-        ApiKeysResponse response = apiKeyService.getApiKeys(userId);
+    public ResponseEntity<List<ApiKeyInfo>> getApiKeysInfo(@PathVariable Long userId){
+        List<ApiKeyInfo> response = apiKeyService.getApiKeysInfo(userId);
 
         return ResponseEntity.ok(response);
     }
