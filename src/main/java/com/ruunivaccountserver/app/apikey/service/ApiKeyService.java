@@ -18,6 +18,11 @@ public class ApiKeyService {
     private final VerificationServerClient verificationServerClient;
 
     public void createApiKey(Long userId){
+        List<VerificationServerApiKeysResponse> apiKeys = verificationServerClient.getApiKeys(userId);
+
+        if(apiKeys.size()>3){
+            throw new RuntimeException();
+        }
 
         kafkaTemplate.send("CREATE_API_KEY",userId.toString());
     }
