@@ -33,4 +33,15 @@ public class User extends BaseTimeEntity {
 
     @Column
     private String password;
+
+    @Column
+    private int apiKeyCount=0;
+
+    public void addApiKey(){
+        this.apiKeyCount+=1;
+    }
+
+    public void deleteApiKey(){
+        this.apiKeyCount-=1;
+    }
 }

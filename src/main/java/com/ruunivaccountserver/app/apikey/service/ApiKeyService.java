@@ -3,6 +3,8 @@ package com.ruunivaccountserver.app.apikey.service;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyEvent.ApiKeyDeleteEvent;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse.ApiKeyInfo;
+import com.ruunivaccountserver.app.user.entity.User;
+import com.ruunivaccountserver.app.user.service.UserService;
 import com.ruunivaccountserver.infrastructure.feign.VerificationServerApi.VerificationServerClient;
 import com.ruunivaccountserver.infrastructure.feign.VerificationServerApiKeysResponse;
 import com.ruunivaccountserver.infrastructure.kafka.KafkaTopic;
@@ -16,14 +18,10 @@ import org.springframework.stereotype.Service;
 public class ApiKeyService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final VerificationServerClient verificationServerClient;
+    private final UserService userService;
 
     public void createApiKey(Long userId){
-        List<VerificationServerApiKeysResponse> apiKeys = verificationServerClient.getApiKeys(userId);
-
-        if(apiKeys.size()>3){
-            throw new RuntimeException();
-        }
-
+        userService.checkApiKeyCountMax(userId);
         kafkaTemplate.send("CREATE_API_KEY",userId.toString());
     }
 
