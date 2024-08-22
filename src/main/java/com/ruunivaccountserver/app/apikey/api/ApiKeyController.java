@@ -3,7 +3,6 @@ package com.ruunivaccountserver.app.apikey.api;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyRequest.ApiKeyCreateRequest;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyRequest.ApiKeyDeleteRequest;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse.ApiKeyInfo;
-import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse.ApiKeysResponse;
 import com.ruunivaccountserver.app.apikey.service.ApiKeyService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
