@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
+    private static final int API_KEY_COUNT_MAX = 3;
 
     public UserInfo getUserInfo(Long userId){
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
@@ -32,7 +33,7 @@ public class UserService {
     public void checkApiKeyCountMax(Long userId){
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        if(user.getApiKeyCount() >= 3){
+        if(user.getApiKeyCount() >= API_KEY_COUNT_MAX){
             throw new MaxApiKeyException();
         }
 
