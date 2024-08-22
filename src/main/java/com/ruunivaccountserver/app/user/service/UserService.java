@@ -42,6 +42,13 @@ public class UserService {
     }
 
     @Transactional
+    public void addApiKey(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        user.addApiKey();
+        userRepository.save(user);
+    }
+
+    @Transactional
     public void deleteApiKey(Long userId){
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.deleteApiKey();

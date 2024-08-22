@@ -9,8 +9,29 @@ public class ApiKeyEvent {
     @Getter
     @AllArgsConstructor
     @Builder
+    public static class ApiKeyCreateEvent{
+        private Long userId;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @Builder
     public static class ApiKeyDeleteEvent{
-        private String userId;
+        private Long userId;
         private String apiKey;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    public static class ApiKeyCreateRollbackEvent{
+        private Long userId;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    public static class ApiKeyDeleteRollbackEvent{
+        private Long userId;
     }
 }

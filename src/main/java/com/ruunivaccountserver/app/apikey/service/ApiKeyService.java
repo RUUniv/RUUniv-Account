@@ -1,13 +1,12 @@
 package com.ruunivaccountserver.app.apikey.service;
 
+import com.ruunivaccountserver.app.apikey.dto.ApiKeyEvent.ApiKeyCreateEvent;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyEvent.ApiKeyDeleteEvent;
-import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse.ApiKeyInfo;
-import com.ruunivaccountserver.app.user.entity.User;
 import com.ruunivaccountserver.app.user.service.UserService;
 import com.ruunivaccountserver.infrastructure.feign.VerificationServerApi.VerificationServerClient;
 import com.ruunivaccountserver.infrastructure.feign.VerificationServerApiKeysResponse;
-import com.ruunivaccountserver.infrastructure.kafka.KafkaTopic;
+import com.ruunivaccountserver.infrastructure.kafka.KafkaTopic.Topic;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -20,31 +19,34 @@ public class ApiKeyService {
     private final VerificationServerClient verificationServerClient;
     private final UserService userService;
 
-    public void createApiKey(Long userId){
+    public void createApiKey(Long userId) {
         userService.checkApiKeyCountMax(userId);
+        ApiKeyCreateEvent event = ApiKeyCreateEvent.builder()
+                .userId(userId)
+                .build();
 
-        kafkaTemplate.send(KafkaTopic.CREATE_API_KEY.toString(),userId.toString());
+        kafkaTemplate.send(Topic.CREATE_API_KEY, event);
     }
 
-    public void deleteApiKey(Long userId , String apiKey){
-        ApiKeyDeleteEvent event = ApiKeyDeleteEvent.builder()
-                    .userId(userId.toString())
-                    .apiKey(apiKey)
-                    .build();
-
+    public void deleteApiKey(Long userId, String apiKey) {
         userService.deleteApiKey(userId);
-        kafkaTemplate.send(KafkaTopic.DELETE_API_KEY.toString(),event);
+        ApiKeyDeleteEvent event = ApiKeyDeleteEvent.builder()
+                .userId(userId)
+                .apiKey(apiKey)
+                .build();
+
+        kafkaTemplate.send(Topic.DELETE_API_KEY, event);
     }
 
-    public List<ApiKeyInfo> getApiKeysInfo(Long userId){
+    public List<ApiKeyInfo> getApiKeysInfo(Long userId) {
         List<VerificationServerApiKeysResponse> apiKeys =
                 verificationServerClient.getApiKeys(userId);
 
         return apiKeys.stream()
                 .map(apiKey -> ApiKeyInfo.builder()
-                .apiKeyId(apiKey.getApiKeyId())
-                .apiKey(apiKey.getApiKey())
-                .build())
+                        .apiKeyId(apiKey.getApiKeyId())
+                        .apiKey(apiKey.getApiKey())
+                        .build())
                 .toList();
     }
 }
