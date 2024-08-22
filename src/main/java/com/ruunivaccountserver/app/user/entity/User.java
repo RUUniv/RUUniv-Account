@@ -1,5 +1,6 @@
 package com.ruunivaccountserver.app.user.entity;
 
+import com.ruunivaccountserver.common.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +22,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,10 +33,4 @@ public class User {
 
     @Column
     private String password;
-
-    @CreatedDate
-    private LocalDate createAt;
-
-    @LastModifiedDate
-    private LocalDate updateAt;
 }
