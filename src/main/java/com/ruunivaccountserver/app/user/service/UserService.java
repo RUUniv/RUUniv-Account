@@ -3,6 +3,7 @@ package com.ruunivaccountserver.app.user.service;
 import com.ruunivaccountserver.app.user.dto.UserResponse.UserInfo;
 import com.ruunivaccountserver.app.user.entity.User;
 import com.ruunivaccountserver.app.user.repository.UserRepository;
+import com.ruunivaccountserver.common.error.user.MaxApiKeyException;
 import com.ruunivaccountserver.common.error.user.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,11 +32,18 @@ public class UserService {
     public void checkApiKeyCountMax(Long userId){
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        if(user.getApiKeyCount() > 3){
-            throw new RuntimeException();
+        if(user.getApiKeyCount() >= 3){
+            throw new MaxApiKeyException();
         }
 
         user.addApiKey();
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteApiKey(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        user.deleteApiKey();
         userRepository.save(user);
     }
 }

@@ -21,13 +21,9 @@ public class ApiKeyService {
     private final UserService userService;
 
     public void createApiKey(Long userId){
-//        userService.checkApiKeyCountMax(userId);
-        List<VerificationServerApiKeysResponse> apiKeys = verificationServerClient.getApiKeys(userId);
-        if(apiKeys.size()>3){
-            throw new RuntimeException();
-        }
+        userService.checkApiKeyCountMax(userId);
 
-        kafkaTemplate.send("CREATE_API_KEY",userId.toString());
+        kafkaTemplate.send(KafkaTopic.CREATE_API_KEY.toString(),userId.toString());
     }
 
     public void deleteApiKey(Long userId , String apiKey){
@@ -36,6 +32,7 @@ public class ApiKeyService {
                     .apiKey(apiKey)
                     .build();
 
+        userService.deleteApiKey(userId);
         kafkaTemplate.send(KafkaTopic.DELETE_API_KEY.toString(),event);
     }
 
