@@ -21,7 +21,12 @@ public class ApiKeyService {
     private final UserService userService;
 
     public void createApiKey(Long userId){
-        userService.checkApiKeyCountMax(userId);
+//        userService.checkApiKeyCountMax(userId);
+        List<VerificationServerApiKeysResponse> apiKeys = verificationServerClient.getApiKeys(userId);
+        if(apiKeys.size()>3){
+            throw new RuntimeException();
+        }
+
         kafkaTemplate.send("CREATE_API_KEY",userId.toString());
     }
 
