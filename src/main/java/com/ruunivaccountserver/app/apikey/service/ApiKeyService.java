@@ -24,7 +24,10 @@ public class ApiKeyService {
     private final VerificationServerClient verificationServerClient;
     private final UserService userService;
 
-    @CacheEvict(value = CacheValue.API_KEY, key = "#userId", cacheManager = "l1CacheManager")
+    @Caching(evict = {
+            @CacheEvict(value = CacheValue.API_KEY, key = "'API_KEY:' + #userId", cacheManager = "l1CacheManager"),
+            @CacheEvict(value = CacheValue.API_KEY, key = "'API_KEY:' + #userId", cacheManager = "l2RedisCacheManager")
+    })
     public void createApiKey(Long userId) {
         userService.checkApiKeyCountMax(userId);
 
@@ -35,7 +38,10 @@ public class ApiKeyService {
         kafkaTemplate.send(Topic.CREATE_API_KEY, event);
     }
 
-    @CacheEvict(value = CacheValue.API_KEY, key = "#userId", cacheManager = "l1CacheManager")
+    @Caching(evict = {
+            @CacheEvict(value = CacheValue.API_KEY, key = "'API_KEY:' + #userId", cacheManager = "l1CacheManager"),
+            @CacheEvict(value = CacheValue.API_KEY, key = "'API_KEY:' + #userId", cacheManager = "l2RedisCacheManager")
+    })
     public void deleteApiKey(Long userId, String apiKey) {
         userService.deleteApiKey(userId);
 
