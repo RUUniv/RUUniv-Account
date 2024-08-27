@@ -3,6 +3,7 @@ package com.ruunivaccountserver.app.apikey.service;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyEvent.ApiKeyCreateEvent;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyEvent.ApiKeyDeleteEvent;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse.ApiKeyInfo;
+import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse.ApiKeysInfo;
 import com.ruunivaccountserver.app.user.service.UserService;
 import com.ruunivaccountserver.infrastructure.cache.CacheType.CacheValue;
 import com.ruunivaccountserver.infrastructure.feign.VerificationServerApi.VerificationServerClient;
@@ -47,18 +48,20 @@ public class ApiKeyService {
     }
 
     @Caching(cacheable = {
-            @Cacheable(value = CacheValue.API_KEY, key = "#userId", cacheManager = "l1CacheManager"),
-            @Cacheable(value = CacheValue.API_KEY, key = "#userId", cacheManager = "l2RedisCacheManager")
+            @Cacheable(value = CacheValue.API_KEY, key = "'API_KEY:' + #userId", cacheManager = "l1CacheManager"),
+            @Cacheable(value = CacheValue.API_KEY, key = "'API_KEY:' + #userId", cacheManager = "l2RedisCacheManager")
     })
-    public List<ApiKeyInfo> getApiKeysInfo(Long userId) {
+    public ApiKeysInfo getApiKeysInfo(Long userId) {
         List<VerificationServerApiKeysResponse> apiKeys =
                 verificationServerClient.getApiKeys(userId);
 
-        return apiKeys.stream()
-                .map(apiKey -> ApiKeyInfo.builder()
-                        .apiKeyId(apiKey.getApiKeyId())
-                        .apiKey(apiKey.getApiKey())
-                        .build())
-                .toList();
+        return ApiKeysInfo.builder()
+                .apiKeysInfo(apiKeys.stream()
+                        .map(apiKey -> ApiKeyInfo.builder()
+                                .apiKeyId(apiKey.getApiKeyId())
+                                .apiKey(apiKey.getApiKey())
+                                .build())
+                        .toList())
+                .build();
     }
 }
