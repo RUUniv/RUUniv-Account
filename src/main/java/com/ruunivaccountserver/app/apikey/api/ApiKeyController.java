@@ -1,12 +1,10 @@
 package com.ruunivaccountserver.app.apikey.api;
 
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse.ApiKeysInfo;
-import com.ruunivaccountserver.app.apikey.service.ApiKeyService;
+import com.ruunivaccountserver.app.apikey.service.interfaces.ApiKeyService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.CacheManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class ApiKeyController {
     private final ApiKeyService apiKeyService;
-    private final List<CacheManager> cacheManagers;
 
     @PostMapping("/api/v1/apiKeys")
     public ResponseEntity<Void> createApiKey(@RequestHeader("passport") Long passport) {
@@ -41,14 +38,5 @@ public class ApiKeyController {
     public ResponseEntity<ApiKeysInfo> getApiKeysInfo(@RequestHeader("passport") Long passport) {
         ApiKeysInfo response = apiKeyService.getApiKeysInfo(passport);
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/test")
-    public void test() {
-
-        cacheManagers.forEach(cacheManager -> {
-                    log.info("value = {}", cacheManager.getCache("API_KEY").get("API_KEY:6785"));
-                }
-        );
     }
 }

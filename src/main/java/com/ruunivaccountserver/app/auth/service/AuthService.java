@@ -1,6 +1,5 @@
 package com.ruunivaccountserver.app.auth.service;
 
-import com.netflix.discovery.provider.Serializer;
 import com.ruunivaccountserver.app.auth.dto.AuthRequest.LoginRequest;
 import com.ruunivaccountserver.app.auth.dto.AuthRequest.SignUpRequest;
 import com.ruunivaccountserver.app.auth.dto.AuthResponse.TokenResponse;
@@ -17,7 +16,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final EncryptUtil encryptUtil;
 
-    public TokenResponse signUp(SignUpRequest request){
+    public TokenResponse signUp(SignUpRequest request) {
         User user = User.builder()
                 .email(request.getEmail())
                 .password(encryptUtil.encryptPassword(request.getPassword()))
@@ -28,16 +27,11 @@ public class AuthService {
         return jwtService.generateToken(saveUser.getId());
     }
 
-    public TokenResponse login(LoginRequest request){
+    public TokenResponse login(LoginRequest request) {
         User user = userRepository.findByEmailAndPassword(request.getEmail(),
-                encryptUtil.encryptPassword(request.getPassword()))
+                        encryptUtil.encryptPassword(request.getPassword()))
                 .orElseThrow(UserNotFoundException::new);
 
         return jwtService.generateToken(user.getId());
     }
-
-//    public TokenResponse refresh(String refreshToken){
-//
-//        return jwtService.generateToken(user.getId());
-//    }
 }

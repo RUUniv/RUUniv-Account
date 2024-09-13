@@ -4,6 +4,7 @@ import com.ruunivaccountserver.app.apikey.dto.ApiKeyEvent.ApiKeyCreateEvent;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyEvent.ApiKeyDeleteEvent;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse.ApiKeyInfo;
 import com.ruunivaccountserver.app.apikey.dto.ApiKeyResponse.ApiKeysInfo;
+import com.ruunivaccountserver.app.apikey.service.interfaces.ApiKeyService;
 import com.ruunivaccountserver.app.user.service.UserService;
 import com.ruunivaccountserver.infrastructure.cache.CacheType.CacheValue;
 import com.ruunivaccountserver.infrastructure.feign.VerificationServerApi.VerificationServerClient;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ApiKeyService {
+public class ApiKeyServiceImpl implements ApiKeyService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final VerificationServerClient verificationServerClient;
     private final UserService userService;
